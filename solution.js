@@ -1,16 +1,16 @@
-var mongo = require('mongodb').MongoClient
-var ageQuery = process.argv[2] || 18;
+var MongoClient = require('mongodb').MongoClient
 var url = 'mongodb://localhost:27017/learnyoumongo';
+var user = {
+	firstName: process.argv[2],
+	lastName: process.argv[3]
+}
 
-mongo.connect(url, function(err, db) {
-
-	db.collection('parrots')
-		.find(
-			{ age: { $gt: +ageQuery }  },
-			{ name: 1, age: 1, _id: 0 })
-		.toArray(function(err, results) {
+MongoClient.connect(url, function(err, db) {
+	if (err) throw err;
+	db.collection('users')
+		.insert( user, function(err, results) {
 			if (err) throw err;
-			console.log(results);
+			console.log(JSON.stringify(user));
 			db.close();
 		})
 
